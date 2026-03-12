@@ -22,6 +22,189 @@
             padding: 16px;
         }
 
+        /* ===================== LOGIN STYLES ===================== */
+        .login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 16px;
+        }
+
+        .login-screen.hidden {
+            display: none;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            text-align: center;
+        }
+
+        .login-card h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .login-card p {
+            font-size: 14px;
+            color: #868e96;
+            margin-bottom: 32px;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            text-align: left;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #495057;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input {
+            padding: 12px 16px;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: #fafbff;
+        }
+
+        .form-group input::placeholder {
+            color: #adb5bd;
+        }
+
+        .password-strength {
+            display: none;
+            font-size: 12px;
+            padding: 8px;
+            border-radius: 6px;
+            margin-top: 4px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .password-strength.show {
+            display: block;
+        }
+
+        .password-strength.weak {
+            background: #ffe0e0;
+            color: #f03e3e;
+        }
+
+        .password-strength.medium {
+            background: #fff3bf;
+            color: #f08c00;
+        }
+
+        .password-strength.strong {
+            background: #e7f5ff;
+            color: #1971c2;
+        }
+
+        .login-error {
+            display: none;
+            background: #ffe0e0;
+            color: #f03e3e;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            border-left: 3px solid #f03e3e;
+        }
+
+        .login-error.show {
+            display: block;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 8px;
+        }
+
+        .login-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .login-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #495057;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .remember-me input[type="checkbox"] {
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .remember-me label {
+            cursor: pointer;
+            margin: 0;
+            font-weight: normal;
+            text-transform: none;
+            letter-spacing: normal;
+            text-align: center;
+        }
+
+        /* ===================== VOICE CHAT CONTAINER ===================== */
+
         .container {
             width: 100%;
             max-width: 600px;
@@ -39,8 +222,15 @@
             color: white;
             padding: 24px;
             border-radius: 24px 24px 0 0;
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            flex: 1;
+            text-align: center;
         }
 
         .header h1 {
@@ -52,6 +242,30 @@
         .header p {
             font-size: 14px;
             opacity: 0.9;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .logout-btn:active {
+            transform: scale(0.95);
         }
 
         .conversation {
@@ -329,11 +543,63 @@
     </style>
 </head>
 <body>
+    <!-- LOGIN SCREEN -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-card">
+            <h1>🔐 Secure Access</h1>
+            <p>OpenClaw Voice Chat</p>
+
+            <div class="login-form">
+                <div class="login-error" id="loginError"></div>
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        placeholder="Enter username"
+                        autocomplete="username"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        placeholder="Enter password"
+                        autocomplete="current-password"
+                    />
+                    <div class="password-strength" id="passwordStrength"></div>
+                </div>
+
+                <div class="remember-me">
+                    <input 
+                        type="checkbox" 
+                        id="rememberMe" 
+                        checked
+                    />
+                    <label for="rememberMe">Remember me</label>
+                </div>
+
+                <button class="login-btn" id="loginBtn" onclick="handleLogin()">
+                    Login
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VOICE CHAT APPLICATION -->
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>🎙️ Voice Chat</h1>
-            <p>Real-time conversation with OpenClaw</p>
+            <div class="header-content">
+                <h1>🎙️ Voice Chat</h1>
+                <p>Real-time conversation with OpenClaw</p>
+            </div>
+            <button class="logout-btn" id="logoutBtn" onclick="handleLogout()">
+                🚪 Logout
+            </button>
         </div>
 
         <!-- Conversation Area -->
@@ -366,6 +632,228 @@
     </div>
 
     <script>
+        // ============================================================================
+        // AUTHENTICATION CONFIG
+        // ============================================================================
+
+        // Credentials (hardcoded for MVP)
+        const AUTH_CONFIG = {
+            username: 'jimmie',
+            passwordHash: '38b6656f219e5a075f31a610808adb46d72382a14c6cd599c6b8ba78f573120a',
+            sessionTokenKey: 'oc_voice_chat_session',
+            attemptsKey: 'oc_login_attempts',
+            cooldownKey: 'oc_login_cooldown',
+            maxAttempts: 3,
+            cooldownMs: 30000, // 30 seconds
+        };
+
+        // ============================================================================
+        // AUTHENTICATION FUNCTIONS
+        // ============================================================================
+
+        // Simple SHA-256 hash (using SubtleCrypto for security)
+        async function sha256(text) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(text);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // Generate random session token
+        function generateSessionToken() {
+            return crypto.randomUUID();
+        }
+
+        // Check password strength
+        function getPasswordStrength(password) {
+            if (!password) return 'weak';
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (password.length >= 12) strength++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^a-zA-Z0-9]/.test(password)) strength++;
+
+            if (strength <= 1) return 'weak';
+            if (strength <= 3) return 'medium';
+            return 'strong';
+        }
+
+        // Update password strength indicator
+        function updatePasswordStrength() {
+            const passwordInput = document.getElementById('password');
+            const strengthIndicator = document.getElementById('passwordStrength');
+            const password = passwordInput.value;
+
+            if (!password) {
+                strengthIndicator.classList.remove('show');
+                return;
+            }
+
+            const strength = getPasswordStrength(password);
+            strengthIndicator.classList.add('show', strength);
+            strengthIndicator.textContent = `Password strength: ${strength.toUpperCase()}`;
+        }
+
+        // Show login error
+        function showLoginError(message) {
+            const errorDiv = document.getElementById('loginError');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+            setTimeout(() => {
+                errorDiv.classList.remove('show');
+            }, 5000);
+        }
+
+        // Check rate limiting
+        function isRateLimited() {
+            const cooldownTime = localStorage.getItem(AUTH_CONFIG.cooldownKey);
+            if (!cooldownTime) return false;
+
+            const now = Date.now();
+            const cooldownEnd = parseInt(cooldownTime);
+            if (now < cooldownEnd) {
+                const remainingSeconds = Math.ceil((cooldownEnd - now) / 1000);
+                showLoginError(`Too many attempts. Try again in ${remainingSeconds}s`);
+                return true;
+            }
+
+            // Cooldown expired, reset attempts
+            localStorage.removeItem(AUTH_CONFIG.attemptsKey);
+            localStorage.removeItem(AUTH_CONFIG.cooldownKey);
+            return false;
+        }
+
+        // Record failed login attempt
+        function recordFailedAttempt() {
+            const attempts = parseInt(localStorage.getItem(AUTH_CONFIG.attemptsKey) || '0') + 1;
+            localStorage.setItem(AUTH_CONFIG.attemptsKey, attempts.toString());
+
+            if (attempts >= AUTH_CONFIG.maxAttempts) {
+                const cooldownUntil = Date.now() + AUTH_CONFIG.cooldownMs;
+                localStorage.setItem(AUTH_CONFIG.cooldownKey, cooldownUntil.toString());
+                showLoginError(`Too many attempts. Locked for 30 seconds.`);
+                document.getElementById('loginBtn').disabled = true;
+                setTimeout(() => {
+                    document.getElementById('loginBtn').disabled = false;
+                }, AUTH_CONFIG.cooldownMs);
+            }
+        }
+
+        // Reset attempts on successful login
+        function resetAttempts() {
+            localStorage.removeItem(AUTH_CONFIG.attemptsKey);
+            localStorage.removeItem(AUTH_CONFIG.cooldownKey);
+        }
+
+        // Handle login form submission
+        async function handleLogin() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+
+            // Validation
+            if (!username || !password) {
+                showLoginError('Please enter both username and password');
+                return;
+            }
+
+            // Check rate limiting
+            if (isRateLimited()) {
+                return;
+            }
+
+            // Disable button during processing
+            const loginBtn = document.getElementById('loginBtn');
+            const originalText = loginBtn.textContent;
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Verifying...';
+
+            try {
+                // Check credentials
+                const passwordHash = await sha256(password);
+                if (username === AUTH_CONFIG.username && passwordHash === AUTH_CONFIG.passwordHash) {
+                    // Success!
+                    resetAttempts();
+                    const sessionToken = generateSessionToken();
+
+                    // Store session
+                    if (rememberMe) {
+                        localStorage.setItem(AUTH_CONFIG.sessionTokenKey, sessionToken);
+                    } else {
+                        sessionStorage.setItem(AUTH_CONFIG.sessionTokenKey, sessionToken);
+                    }
+
+                    // Hide login screen
+                    document.getElementById('loginScreen').classList.add('hidden');
+                } else {
+                    // Failed
+                    recordFailedAttempt();
+                    showLoginError('Invalid username or password');
+                    document.getElementById('password').value = '';
+                }
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.textContent = originalText;
+            }
+        }
+
+        // Handle logout
+        function handleLogout() {
+            // Clear session
+            localStorage.removeItem(AUTH_CONFIG.sessionTokenKey);
+            sessionStorage.removeItem(AUTH_CONFIG.sessionTokenKey);
+
+            // Clear login form
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('passwordStrength').classList.remove('show');
+            document.getElementById('loginError').classList.remove('show');
+
+            // Show login screen
+            document.getElementById('loginScreen').classList.remove('hidden');
+
+            // Reset conversation
+            const conv = document.getElementById('conversation');
+            conv.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">💬</div>
+                    <p>Start a conversation by clicking "Start Listening"</p>
+                </div>
+            `;
+            state.conversationHistory = [];
+        }
+
+        // Check if user is authenticated
+        function isAuthenticated() {
+            const sessionToken = localStorage.getItem(AUTH_CONFIG.sessionTokenKey) || 
+                                 sessionStorage.getItem(AUTH_CONFIG.sessionTokenKey);
+            return !!sessionToken;
+        }
+
+        // Initialize authentication
+        function initAuth() {
+            // Add event listeners to password field
+            document.getElementById('password').addEventListener('input', updatePasswordStrength);
+
+            // Allow Enter key to submit login
+            document.getElementById('username').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleLogin();
+            });
+            document.getElementById('password').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleLogin();
+            });
+
+            // Check if user is already logged in
+            if (isAuthenticated()) {
+                document.getElementById('loginScreen').classList.add('hidden');
+            } else {
+                document.getElementById('loginScreen').classList.remove('hidden');
+                document.getElementById('username').focus();
+            }
+        }
+
         // ============================================================================
         // State Management
         // ============================================================================
@@ -706,6 +1194,9 @@
         // ============================================================================
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Initialize authentication first
+            initAuth();
+
             // Initialize speech recognition
             initSpeechRecognition();
 

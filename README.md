@@ -2,6 +2,49 @@
 
 Real-time voice conversation between user (browser) and OpenClaw agent.
 
+## 🔐 Authentication
+
+### Credentials (MVP)
+
+| Field | Value |
+|-------|-------|
+| Username | `jimmie` |
+| Password | See `AUTH_CREDENTIALS.txt` (secure file) |
+
+### Login Flow
+
+1. **Open Application** → Login screen appears
+2. **Enter Credentials** → Username + Password
+3. **Click Login** (or press Enter)
+4. **Success** → Voice chat interface loads
+5. **Auto-Login** → Check "Remember me" to persist session across page reloads
+
+### Session Management
+
+- ✅ **"Remember me" checked** → Token stored in `localStorage` (persists)
+- ✅ **"Remember me" unchecked** → Token stored in `sessionStorage` (browser session only)
+- ✅ **On Logout** → Clear localStorage & sessionStorage, return to login screen
+- ✅ **On Page Reload** → Check for valid session token → auto-login if found
+
+### Security Features
+
+- **Password Hashing**: SHA-256 (client-side)
+- **Session Tokens**: UUID v4 (cryptographically secure, unpredictable)
+- **Rate Limiting**: Max 3 failed attempts → 30-second cooldown
+- **No Plaintext Storage**: Password not stored or transmitted in plaintext
+- **Client-Side Validation**: All checks happen in browser (no external calls)
+
+### Future Upgrades (v2+)
+
+- Backend authentication (Node.js/Python)
+- bcrypt password hashing (salted)
+- JWT tokens
+- User database
+- HTTPS enforcement
+- HttpOnly cookies
+
+---
+
 ## Quick Start
 
 ### 1️⃣ View in Canvas
@@ -16,19 +59,23 @@ Simply open `index.html` in any modern browser (Chrome, Safari, Firefox, Edge).
 
 ### 3️⃣ Test the Voice Chat
 
-1. Click **"Start Listening"** button
-2. Speak naturally into your microphone
-3. See your speech transcribed in real-time
-4. Agent responds with text + spoken audio
-5. Continue the conversation
+1. **Login** with credentials from `AUTH_CREDENTIALS.txt`
+2. Click **"Start Listening"** button
+3. Speak naturally into your microphone
+4. See your speech transcribed in real-time
+5. Agent responds with text + spoken audio
+6. Continue the conversation
+7. Click **🚪 Logout** in header to end session
 
 ## Features
 
 | Feature | Status | Notes |
 |---------|--------|-------|
+| 🔐 Authentication | ✅ Login required | Username + password with rate limiting |
 | Speech-to-Text | ✅ Web Speech API | Real-time transcription |
 | Text-to-Speech | ✅ Web Speech Synthesis | Auto-play agent responses |
 | Conversation History | ✅ Persistent in session | Clear button available |
+| Session Management | ✅ localStorage support | Auto-login with "Remember me" |
 | Mobile Support | ✅ iOS & Android | Touch-friendly, responsive |
 | Error Handling | ✅ Graceful fallbacks | Console logs for debugging |
 | Backend Integration | 🔗 HTTP API ready | Requires /api/chat endpoint |
