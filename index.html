@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw Voice Chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            height: 90vh;
+            max-height: 800px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 24px 24px 0 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .conversation {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .conversation::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .conversation::-webkit-scrollbar-track {
+            background: #e9ecef;
+            border-radius: 4px;
+        }
+
+        .conversation::-webkit-scrollbar-thumb {
+            background: #adb5bd;
+            border-radius: 4px;
+        }
+
+        .conversation::-webkit-scrollbar-thumb:hover {
+            background: #868e96;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message.agent {
+            justify-content: flex-start;
+        }
+
+        .bubble {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            word-wrap: break-word;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .message.user .bubble {
+            background: #667eea;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.agent .bubble {
+            background: white;
+            color: #333;
+            border: 1px solid #e9ecef;
+            border-bottom-left-radius: 4px;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 12px 16px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #adb5bd;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                opacity: 0.3;
+                transform: translateY(0);
+            }
+            30% {
+                opacity: 1;
+                transform: translateY(-10px);
+            }
+        }
+
+        .controls {
+            padding: 20px;
+            border-top: 1px solid #e9ecef;
+            background: white;
+            border-radius: 0 0 24px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .transcription-box {
+            background: #f1f3f5;
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            padding: 12px;
+            min-height: 40px;
+            font-size: 13px;
+            color: #495057;
+            border-left: 3px solid #667eea;
+        }
+
+        .transcription-box.listening {
+            background: #e7f5ff;
+            border-color: #74c0fc;
+            color: #1971c2;
+            border-left-color: #1971c2;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-primary.listening {
+            background: #f03e3e;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(240, 62, 62, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 8px rgba(240, 62, 62, 0);
+            }
+        }
+
+        .btn-secondary {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #dee2e6;
+        }
+
+        .status {
+            text-align: center;
+            font-size: 12px;
+            color: #868e96;
+            padding: 0 8px;
+        }
+
+        .status.error {
+            color: #f03e3e;
+        }
+
+        .status.success {
+            color: #2f9e44;
+        }
+
+        .mic-icon {
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #868e96;
+            text-align: center;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .mobile-warning {
+            background: #fff3bf;
+            border: 1px solid #ffd43b;
+            color: #5c940d;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                height: 100vh;
+                max-height: none;
+                border-radius: 0;
+            }
+
+            .header {
+                border-radius: 0;
+            }
+
+            .controls {
+                border-radius: 0;
+            }
+
+            .message .bubble {
+                max-width: 95%;
+            }
+
+            .btn {
+                padding: 14px 12px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎙️ Voice Chat</h1>
+            <p>Real-time conversation with OpenClaw</p>
+        </div>
+
+        <!-- Conversation Area -->
+        <div class="conversation" id="conversation">
+            <div class="empty-state">
+                <div class="empty-state-icon">💬</div>
+                <p>Start a conversation by clicking "Start Listening"</p>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div id="status" class="status"></div>
+
+            <div class="transcription-box" id="transcription">
+                Waiting for input...
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" id="listenBtn" onclick="toggleListening()">
+                    <span>🎤</span>
+                    <span id="listenBtnText">Start Listening</span>
+                </button>
+                <button class="btn btn-secondary" id="clearBtn" onclick="clearConversation()">
+                    <span>🗑️</span>
+                    <span>Clear</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================================
+        // State Management
+        // ============================================================================
+
+        const state = {
+            isListening: false,
+            isSpeaking: false,
+            recognition: null,
+            synth: window.speechSynthesis,
+            conversationHistory: [],
+            lastMessageTime: 0,
+        };
+
+        // ============================================================================
+        // Speech Recognition Setup
+        // ============================================================================
+
+        function initSpeechRecognition() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            
+            if (!SpeechRecognition) {
+                showStatus('Speech Recognition not supported in this browser', 'error');
+                document.getElementById('listenBtn').disabled = true;
+                return false;
+            }
+
+            state.recognition = new SpeechRecognition();
+            state.recognition.continuous = false;
+            state.recognition.interimResults = true;
+            state.recognition.language = 'en-US';
+
+            state.recognition.onstart = () => {
+                state.isListening = true;
+                updateListenButton();
+                updateTranscription('Listening...', true);
+                showStatus('Listening... Speak now', 'success');
+            };
+
+            state.recognition.onresult = (event) => {
+                let transcript = '';
+                let isFinal = false;
+
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const t = event.results[i][0].transcript;
+                    transcript += t;
+                    if (event.results[i].isFinal) {
+                        isFinal = true;
+                    }
+                }
+
+                if (transcript.trim()) {
+                    updateTranscription(transcript, !isFinal);
+                }
+
+                if (isFinal && transcript.trim()) {
+                    handleUserMessage(transcript.trim());
+                }
+            };
+
+            state.recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                let errorMsg = event.error;
+
+                if (event.error === 'no-speech') {
+                    errorMsg = 'No speech detected. Try again.';
+                } else if (event.error === 'network') {
+                    errorMsg = 'Network error. Check your connection.';
+                } else if (event.error === 'not-allowed') {
+                    errorMsg = 'Microphone access denied. Please allow access.';
+                }
+
+                showStatus(`Error: ${errorMsg}`, 'error');
+                state.isListening = false;
+                updateListenButton();
+            };
+
+            state.recognition.onend = () => {
+                state.isListening = false;
+                updateListenButton();
+                updateTranscription('Ready to listen', false);
+            };
+
+            return true;
+        }
+
+        // ============================================================================
+        // Button & UI Management
+        // ============================================================================
+
+        function toggleListening() {
+            if (!state.recognition) {
+                initSpeechRecognition();
+            }
+
+            if (state.isListening) {
+                state.recognition.stop();
+            } else {
+                try {
+                    state.recognition.start();
+                } catch (e) {
+                    console.warn('Recognition already starting:', e);
+                }
+            }
+        }
+
+        function updateListenButton() {
+            const btn = document.getElementById('listenBtn');
+            const text = document.getElementById('listenBtnText');
+
+            if (state.isListening) {
+                btn.classList.add('listening');
+                text.textContent = 'Stop Listening';
+                btn.disabled = false;
+            } else {
+                btn.classList.remove('listening');
+                text.textContent = 'Start Listening';
+                btn.disabled = false;
+            }
+        }
+
+        function updateTranscription(text, isInterim = false) {
+            const box = document.getElementById('transcription');
+            box.textContent = text;
+            if (isInterim) {
+                box.classList.add('listening');
+            } else {
+                box.classList.remove('listening');
+            }
+        }
+
+        function showStatus(text, type = 'default') {
+            const status = document.getElementById('status');
+            status.textContent = text;
+            status.className = 'status';
+            if (type === 'error') status.classList.add('error');
+            if (type === 'success') status.classList.add('success');
+
+            // Auto-clear after 3 seconds
+            setTimeout(() => {
+                if (status.textContent === text) {
+                    status.textContent = '';
+                }
+            }, 3000);
+        }
+
+        // ============================================================================
+        // Message Handling
+        // ============================================================================
+
+        function addMessage(text, isUser = true) {
+            const conv = document.getElementById('conversation');
+
+            // Remove empty state on first message
+            const emptyState = conv.querySelector('.empty-state');
+            if (emptyState) emptyState.remove();
+
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${isUser ? 'user' : 'agent'}`;
+
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.textContent = text;
+
+            msgDiv.appendChild(bubble);
+            conv.appendChild(msgDiv);
+
+            // Auto-scroll to bottom
+            conv.scrollTop = conv.scrollHeight;
+
+            // Store in history
+            state.conversationHistory.push({
+                role: isUser ? 'user' : 'assistant',
+                text: text,
+                timestamp: Date.now(),
+            });
+        }
+
+        function showTypingIndicator() {
+            const conv = document.getElementById('conversation');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'message agent';
+            msgDiv.innerHTML = `
+                <div class="typing-indicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            `;
+            msgDiv.id = 'typing-indicator';
+            conv.appendChild(msgDiv);
+            conv.scrollTop = conv.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const typing = document.getElementById('typing-indicator');
+            if (typing) typing.remove();
+        }
+
+        async function handleUserMessage(text) {
+            // Add user message to UI
+            addMessage(text, true);
+            updateTranscription('Processing...', false);
+
+            // Show typing indicator
+            showTypingIndicator();
+
+            try {
+                // Get response from OpenClaw
+                const response = await getOpenClawResponse(text);
+
+                // Remove typing indicator
+                removeTypingIndicator();
+
+                // Add agent response to UI
+                addMessage(response, false);
+                updateTranscription('Ready to listen', false);
+
+                // Speak the response
+                await speakText(response);
+            } catch (error) {
+                removeTypingIndicator();
+                console.error('Error getting response:', error);
+                addMessage('Sorry, I encountered an error. Please try again.', false);
+                updateTranscription('Error - try again', false);
+                showStatus('Error communicating with OpenClaw', 'error');
+            }
+        }
+
+        // ============================================================================
+        // OpenClaw Integration
+        // ============================================================================
+
+        async function getOpenClawResponse(userText) {
+            // Construct context from conversation history
+            const messages = state.conversationHistory
+                .slice(-10) // Last 10 messages for context
+                .map((msg) => ({
+                    role: msg.role,
+                    content: msg.text,
+                }));
+
+            // Add current user message
+            messages.push({
+                role: 'user',
+                content: userText,
+            });
+
+            try {
+                // Attempt WebSocket/HTTP connection to OpenClaw backend
+                // For now, use a simple HTTP POST to a local endpoint
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        messages: messages,
+                        model: 'claude-haiku',
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                return data.response || 'No response received.';
+            } catch (error) {
+                console.warn('HTTP API failed, attempting fallback...');
+
+                // Fallback: Use canvas eval to call OpenClaw directly
+                try {
+                    return await getResponseViaCanvas(userText);
+                } catch (canvasError) {
+                    console.error('Canvas fallback failed:', canvasError);
+
+                    // Last resort: Simple echo response
+                    return `I understood: "${userText}". Please ensure OpenClaw gateway is running for full integration.`;
+                }
+            }
+        }
+
+        async function getResponseViaCanvas(userText) {
+            // This would use the canvas eval API if available
+            // For now, return a mock response
+            return `Echo response to: "${userText}". (Canvas integration pending)`;
+        }
+
+        // ============================================================================
+        // Text-to-Speech
+        // ============================================================================
+
+        function speakText(text) {
+            return new Promise((resolve) => {
+                // Cancel any ongoing speech
+                state.synth.cancel();
+
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 1;
+                utterance.pitch = 1;
+                utterance.volume = 1;
+
+                utterance.onend = () => {
+                    state.isSpeaking = false;
+                    resolve();
+                };
+
+                utterance.onerror = (e) => {
+                    console.error('TTS error:', e);
+                    state.isSpeaking = false;
+                    resolve();
+                };
+
+                state.isSpeaking = true;
+                state.synth.speak(utterance);
+            });
+        }
+
+        // ============================================================================
+        // Utility Functions
+        // ============================================================================
+
+        function clearConversation() {
+            const conv = document.getElementById('conversation');
+            conv.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">💬</div>
+                    <p>Conversation cleared. Start a new conversation!</p>
+                </div>
+            `;
+            state.conversationHistory = [];
+            updateTranscription('Ready to listen', false);
+            showStatus('Conversation cleared', 'success');
+        }
+
+        // ============================================================================
+        // Initialization
+        // ============================================================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize speech recognition
+            initSpeechRecognition();
+
+            // Check browser support
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                showStatus('Speech Recognition not supported', 'error');
+            }
+
+            // Request microphone permission
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices
+                    .getUserMedia({ audio: true })
+                    .then(() => {
+                        showStatus('Microphone access granted', 'success');
+                    })
+                    .catch((err) => {
+                        console.error('Microphone permission denied:', err);
+                        showStatus('Please allow microphone access', 'error');
+                    });
+            }
+
+            updateTranscription('Ready to listen', false);
+        });
+
+        // Handle page unload
+        window.addEventListener('beforeunload', () => {
+            if (state.recognition && state.isListening) {
+                state.recognition.stop();
+            }
+            state.synth.cancel();
+        });
+    </script>
+</body>
+</html>
